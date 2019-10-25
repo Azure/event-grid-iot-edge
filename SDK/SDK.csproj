@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <RootNamespace>$(RootNamespacePrefix)SDK</RootNamespace>
+    <AssemblyName>$(RootNamespace)</AssemblyName>
+    <TargetFrameworks>netcoreapp2.1;netstandard2.0</TargetFrameworks>
+    <TargetsForTfmSpecificBuildOutput Condition="'$(TargetFramework)'=='netcoreapp2.1'">$(TargetsForTfmSpecificBuildOutput);IncludeP2PAssets</TargetsForTfmSpecificBuildOutput>
+    
+    <!-- nuget pack default properties
+    Id/PackageId defaults to AssemblyName
+    Version/PackageVersion is assigned by nbgv
+    -->
+    <Authors>Microsoft</Authors>
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://azure.microsoft.com/en-us/services/event-grid/</PackageProjectUrl>
+    <Description></Description>
+    <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</PackageIconUrl>
+    <PackageTags>Azure;EventGrid;IoT;Edge</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="2.1.1" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="1.2.2" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="4.5.0" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp2.1'">
+    <ProjectReference Include="..\SecurityDaemonClient\SecurityDaemonClient.csproj" PrivateAssets="all"/>
+    <!-- Explicitly add SecurityDaemonClient's dependencies here otherwise the generated nuspec won't have these listed.-->
+    <!-- Ideally SecurityDaemonClient should be its' own nuget. -->
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="[5.2.6,5.3.0)" />
+  </ItemGroup>
+
+  <Target Name="IncludeP2PAssets">
+    <ItemGroup>
+      <BuildOutputInPackage Include="$(OutputPath)$(RootNamespacePrefix)SecurityDaemonClient.dll" />
+    </ItemGroup>
+  </Target>
+</Project>

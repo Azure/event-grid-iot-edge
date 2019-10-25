@@ -1,0 +1,14 @@
+ARG base_tag=2.1.10-bionic-arm32v7
+FROM microsoft/dotnet:2.1-sdk AS build-env
+WORKDIR /src
+COPY . ./
+RUN dotnet restore /src/IoTModules/c#/subscriber/*.csproj
+RUN dotnet publish /src/IoTModules/c#/subscriber/*.csproj -c Release -o out
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:${base_tag}
+
+WORKDIR /app
+COPY --from=build-env /src/IoTModules/c#/subscriber/out/ .
+EXPOSE 8080/tcp
+EXPOSE 4430/tcp
+CMD ["dotnet", "aegs.dll"]

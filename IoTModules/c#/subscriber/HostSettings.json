@@ -1,0 +1,40 @@
+﻿{
+  "configuration": {
+    "enableEventGrid":  true,
+    "eventGrid": {
+      "url": "https://eventgridmodule:4438",
+      "initialDelayInSeconds": 60,
+      "topic": {
+        "name": "egtopic"
+      },
+      "subscription": {
+        "name": "egsubscribermodule",
+        "eventSchema": "eventgridschema",
+        "url": "https://egsubscribermodule:4430"
+      }
+    }
+  },
+  "api": {
+    "requestTimeoutInSeconds": 30,
+    "captureStartupErrors": "true",
+    "detailedErrors": "true",
+    "kestrel": {
+      "addServerHeader": false,
+      "keepAliveTimeoutInSeconds": 300,
+      "endpoints": {
+        "http": {
+          "url": "http://*:8080"
+        },
+        "https": {
+          "url": "https://*:4430"
+        }
+      }
+    },
+    "logging": {
+      "LogLevel": {
+        "Default": "Warning",
+        "System.Net.Http.HttpClient": "Error"
+      }
+    }
+  }
+}

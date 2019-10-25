@@ -1,0 +1,10 @@
+FROM microsoft/dotnet:2.1-sdk AS build-env
+WORKDIR /src
+COPY . ./
+RUN dotnet restore /src/IoTModules/c#/publisher/*.csproj
+RUN dotnet publish /src/IoTModules/c#/publisher/*.csproj -c Release -o out
+
+FROM mcr.microsoft.com/dotnet/core/runtime:2.1-alpine3.7
+WORKDIR /app
+COPY --from=build-env /src/IoTModules/c#/publisher/out/ .
+CMD ["dotnet", "aegp.dll"]

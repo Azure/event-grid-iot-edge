@@ -1,0 +1,18 @@
+﻿{
+  "configuration": {
+    "enableEventGrid":  true,
+    "eventGrid": {
+      "url": "https://eventgridmodule:4438",
+      "publishIntervalInSeconds": 30,
+      "initialDelayInSeconds":  60,
+      "topic": {
+        "name": "egtopic",
+        "schema": "eventgridschema"
+      },
+      "clientAuth": {
+        "source": "IoTEdge",
+        "token1": null
+      }
+    }
+  }
+}
