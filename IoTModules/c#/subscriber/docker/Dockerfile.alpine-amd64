@@ -1,4 +1,4 @@
-ARG base_tag=2.1.10-alpine3.7
+ARG base_tag=2.1-alpine3.7
 
 FROM microsoft/dotnet:2.1-sdk AS build-env
 WORKDIR /src
