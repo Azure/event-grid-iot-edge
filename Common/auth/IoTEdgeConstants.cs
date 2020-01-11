@@ -1,7 +1,7 @@
 ﻿// Copyright(c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.Azure.EventGridEdge.Samples.Auth
+namespace Microsoft.Azure.EventGridEdge.Samples.Common.Auth
 {
     internal class IoTEdgeConstants
     {

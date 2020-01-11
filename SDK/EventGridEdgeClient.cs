@@ -87,7 +87,7 @@ namespace Microsoft.Azure.EventGridEdge.SDK
 
         public async Task<T> DeserializeAsync<T>(HttpResponseMessage response)
         {
-            using (Stream stream = await response.Content.ReadAsStreamAsync())
+            using (Stream stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
             {
                 return this.Deserialize<T>(stream);
             }

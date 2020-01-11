@@ -44,5 +44,10 @@ namespace Microsoft.Azure.EventGridEdge.SDK
         ///// and time to live for events.
         ///// </summary>
         public RetryPolicy RetryPolicy { get; set; }
+
+        /// <summary>
+        /// Controls the behavior of how events are persisted for this subscription. By default there is no persistence.
+        /// </summary>
+        public PersistencePolicy PersistencePolicy { get; set; }
     }
 }

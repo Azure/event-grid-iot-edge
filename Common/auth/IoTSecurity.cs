@@ -21,7 +21,7 @@ using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Security;
 
-namespace Microsoft.Azure.EventGridEdge.Samples.Auth
+namespace Microsoft.Azure.EventGridEdge.Samples.Common.Auth
 {
     public class IoTSecurity
     {

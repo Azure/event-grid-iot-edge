@@ -10,10 +10,10 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.EventGridEdge.SDK;
-using Microsoft.Azure.EventGridEdge.Samples.Auth;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Linq;
+using Microsoft.Azure.EventGridEdge.Samples.Common.Auth;
 
 namespace Microsoft.Azure.EventGridEdge.Samples.Subscriber
 {

@@ -15,10 +15,10 @@ namespace Microsoft.Azure.EventGridEdge.SDK
         {
             if (!response.IsSuccessStatusCode)
             {
-                string responsePayload = "!!!EMPTY PAYLOAD";
+                string responsePayload;
                 try
                 {
-                    responsePayload = await response.Content.ReadAsStringAsync();
+                    responsePayload = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.EventGridEdge.Samples.Auth;
+using Microsoft.Azure.EventGridEdge.Samples.Common.Auth;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Azure.EventGridEdge.Samples.Subscriber

@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Azure.EventGridEdge.SDK
 {
@@ -31,9 +32,8 @@ namespace Microsoft.Azure.EventGridEdge.SDK
 
         public T Data { get; set; }
 
-#pragma warning disable CA1707 // Identifiers should not contain underscores
+        [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "cloudevents spec demands it")]
         public T Data_Base64 { get; set; }
-#pragma warning restore CA1707 // Identifiers should not contain underscores
 
         public bool Equals(CloudEvent<T> other)
         {

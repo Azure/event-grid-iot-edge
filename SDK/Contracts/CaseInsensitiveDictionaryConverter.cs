@@ -27,7 +27,6 @@ namespace Microsoft.Azure.EventGridEdge.SDK
                 return null;
             }
 
-            string path = reader.Path;
             var obj = JObject.Load(reader);
             Dictionary<string, string> defaultDictionary = obj.ToObject<Dictionary<string, string>>(serializer);
             return new Dictionary<string, string>(defaultDictionary, StringComparer.OrdinalIgnoreCase);

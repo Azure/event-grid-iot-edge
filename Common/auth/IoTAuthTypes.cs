@@ -4,7 +4,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.EventGridEdge.Samples.Auth
+namespace Microsoft.Azure.EventGridEdge.Samples.Common.Auth
 {
     public enum PrivateKeyType
     {

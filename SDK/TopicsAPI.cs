@@ -26,7 +26,7 @@ namespace Microsoft.Azure.EventGridEdge.SDK
             using (StreamContent streamContent = this.client.CreateJsonContent(topic))
             using (var request = new HttpRequestMessage(HttpMethod.Put, $"topics/{UrlEncoder.Default.Encode(topicName)}{ApiVersionSuffix}") { Content = streamContent })
             {
-                using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token))
+                using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token).ConfigureAwait(false))
                 {
                     await response.ThrowIfFailedAsync(request);
                     return await this.client.DeserializeAsync<Topic>(response);
@@ -37,7 +37,7 @@ namespace Microsoft.Azure.EventGridEdge.SDK
         public async Task<Topic> GetTopicAsync(string topicName, CancellationToken token)
         {
             using (var request = new HttpRequestMessage(HttpMethod.Get, $"topics/{UrlEncoder.Default.Encode(topicName)}{ApiVersionSuffix}"))
-            using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token))
+            using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token).ConfigureAwait(false))
             {
                 await response.ThrowIfFailedAsync(request);
                 return await this.client.DeserializeAsync<Topic>(response);
@@ -47,7 +47,7 @@ namespace Microsoft.Azure.EventGridEdge.SDK
         public async Task<IEnumerable<Topic>> GetTopicsAsync(CancellationToken token)
         {
             using (var request = new HttpRequestMessage(HttpMethod.Get, $"topics{ApiVersionSuffix}"))
-            using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token))
+            using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token).ConfigureAwait(false))
             {
                 await response.ThrowIfFailedAsync(request);
                 return await this.client.DeserializeAsync<IEnumerable<Topic>>(response);
@@ -57,7 +57,7 @@ namespace Microsoft.Azure.EventGridEdge.SDK
         public async Task DeleteTopicAsync(string topicName, CancellationToken token)
         {
             using (var request = new HttpRequestMessage(HttpMethod.Delete, $"topics/{UrlEncoder.Default.Encode(topicName)}{ApiVersionSuffix}"))
-            using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token))
+            using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token).ConfigureAwait(false))
             {
                 await response.ThrowIfFailedAsync(request);
             }

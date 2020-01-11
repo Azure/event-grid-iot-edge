@@ -25,9 +25,9 @@ namespace Microsoft.Azure.EventGridEdge.SDK
         public async Task PublishJsonAsync<T>(string topicName, string eventId, T payload, MediaTypeHeaderValue contentType, CancellationToken token)
         {
             using (StreamContent streamContent = this.client.CreateJsonContent(payload, nameof(this.PublishJsonAsync), contentType))
-            using (var request = new HttpRequestMessage(HttpMethod.Post, $"topics/{UrlEncoder.Default.Encode(topicName)}/events/{eventId}{ApiVersionSuffix}") { Content = streamContent })
+            using (var request = new HttpRequestMessage(HttpMethod.Post, $"topics/{UrlEncoder.Default.Encode(topicName)}/events/{UrlEncoder.Default.Encode(eventId)}{ApiVersionSuffix}") { Content = streamContent })
             {
-                using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token))
+                using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token).ConfigureAwait(false))
                 {
                     await response.ThrowIfFailedAsync(request);
                 }
@@ -39,7 +39,7 @@ namespace Microsoft.Azure.EventGridEdge.SDK
             using (StreamContent streamContent = this.client.CreateJsonContent(payload, nameof(this.PublishJsonAsync), contentType))
             using (var request = new HttpRequestMessage(HttpMethod.Post, $"topics/{UrlEncoder.Default.Encode(topicName)}/events{ApiVersionSuffix}") { Content = streamContent })
             {
-                using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token))
+                using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token).ConfigureAwait(false))
                 {
                     await response.ThrowIfFailedAsync(request);
                 }
@@ -52,7 +52,7 @@ namespace Microsoft.Azure.EventGridEdge.SDK
             {
                 byteArrayContent.Headers.ContentType = contentType;
                 byteArrayContent.Headers.ContentLength = payload.Length;
-                using (var request = new HttpRequestMessage(HttpMethod.Post, $"topics/{UrlEncoder.Default.Encode(topicName)}/events/{eventId}{ApiVersionSuffix}") { Content = byteArrayContent })
+                using (var request = new HttpRequestMessage(HttpMethod.Post, $"topics/{UrlEncoder.Default.Encode(topicName)}/events/{UrlEncoder.Default.Encode(eventId)}{ApiVersionSuffix}") { Content = byteArrayContent })
                 {
                     if (httpHeaders != null)
                     {
@@ -62,7 +62,7 @@ namespace Microsoft.Azure.EventGridEdge.SDK
                         }
                     }
 
-                    using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token))
+                    using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token).ConfigureAwait(false))
                     {
                         await response.ThrowIfFailedAsync(request);
                     }
@@ -86,7 +86,7 @@ namespace Microsoft.Azure.EventGridEdge.SDK
                         }
                     }
 
-                    using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token))
+                    using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token).ConfigureAwait(false))
                     {
                         await response.ThrowIfFailedAsync(request);
                     }

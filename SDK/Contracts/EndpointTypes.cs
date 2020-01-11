@@ -9,5 +9,9 @@ namespace Microsoft.Azure.EventGridEdge.SDK
     {
         public const string WebHook = nameof(WebHook);
         public const string EventGrid = nameof(EventGrid);
+        public const string EventHub = nameof(EventHub);
+        public const string ServiceBusQueue = nameof(ServiceBusQueue);
+        public const string ServiceBusTopic = nameof(ServiceBusTopic);
+        public const string StorageQueue = nameof(StorageQueue);
     }
 }

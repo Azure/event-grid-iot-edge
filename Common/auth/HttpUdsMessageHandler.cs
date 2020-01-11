@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.Azure.EventGridEdge.Samples.Auth
+namespace Microsoft.Azure.EventGridEdge.Samples.Common.Auth
 {
     /// <summary>
     /// Unix domain message handler.

@@ -10,101 +10,34 @@ namespace Microsoft.Azure.EventGridEdge.SDK
     {
         public static Type OperatorTypeToAdvancedFilter(AdvancedFilterOperatorType operatorType)
         {
-            switch (operatorType)
+            return operatorType switch
             {
-                case AdvancedFilterOperatorType.NumberIn:
-                    return typeof(NumberInAdvancedFilter);
+                AdvancedFilterOperatorType.NumberIn => typeof(NumberInAdvancedFilter),
 
-                case AdvancedFilterOperatorType.NumberNotIn:
-                    return typeof(NumberNotInAdvancedFilter);
+                AdvancedFilterOperatorType.NumberNotIn => typeof(NumberNotInAdvancedFilter),
 
-                case AdvancedFilterOperatorType.NumberLessThan:
-                    return typeof(NumberLessThanAdvancedFilter);
+                AdvancedFilterOperatorType.NumberLessThan => typeof(NumberLessThanAdvancedFilter),
 
-                case AdvancedFilterOperatorType.NumberLessThanOrEquals:
-                    return typeof(NumberLessThanOrEqualsAdvancedFilter);
+                AdvancedFilterOperatorType.NumberLessThanOrEquals => typeof(NumberLessThanOrEqualsAdvancedFilter),
 
-                case AdvancedFilterOperatorType.NumberGreaterThan:
-                    return typeof(NumberGreaterThanAdvancedFilter);
+                AdvancedFilterOperatorType.NumberGreaterThan => typeof(NumberGreaterThanAdvancedFilter),
 
-                case AdvancedFilterOperatorType.NumberGreaterThanOrEquals:
-                    return typeof(NumberGreaterThanOrEqualsAdvancedFilter);
+                AdvancedFilterOperatorType.NumberGreaterThanOrEquals => typeof(NumberGreaterThanOrEqualsAdvancedFilter),
 
-                case AdvancedFilterOperatorType.BoolEquals:
-                    return typeof(BoolEqualsAdvancedFilter);
+                AdvancedFilterOperatorType.BoolEquals => typeof(BoolEqualsAdvancedFilter),
 
-                case AdvancedFilterOperatorType.StringIn:
-                    return typeof(StringInAdvancedFilter);
+                AdvancedFilterOperatorType.StringIn => typeof(StringInAdvancedFilter),
 
-                case AdvancedFilterOperatorType.StringNotIn:
-                    return typeof(StringNotInAdvancedFilter);
+                AdvancedFilterOperatorType.StringNotIn => typeof(StringNotInAdvancedFilter),
 
-                case AdvancedFilterOperatorType.StringBeginsWith:
-                    return typeof(StringBeginsWithAdvancedFilter);
+                AdvancedFilterOperatorType.StringBeginsWith => typeof(StringBeginsWithAdvancedFilter),
 
-                case AdvancedFilterOperatorType.StringEndsWith:
-                    return typeof(StringEndsWithAdvancedFilter);
+                AdvancedFilterOperatorType.StringEndsWith => typeof(StringEndsWithAdvancedFilter),
 
-                case AdvancedFilterOperatorType.StringContains:
-                    return typeof(StringContainsAdvancedFilter);
+                AdvancedFilterOperatorType.StringContains => typeof(StringContainsAdvancedFilter),
 
-                default:
-                    throw new ArgumentException($"Advanced Filter operatorType {operatorType} not supported");
-            }
-        }
-
-        public static AdvancedFilterOperatorType AdvancedFilterToOperatorType(Type type)
-        {
-            if (type == typeof(NumberInAdvancedFilter))
-            {
-                return AdvancedFilterOperatorType.NumberIn;
-            }
-            else if (type == typeof(NumberNotInAdvancedFilter))
-            {
-                return AdvancedFilterOperatorType.NumberNotIn;
-            }
-            else if (type == typeof(NumberLessThanAdvancedFilter))
-            {
-                return AdvancedFilterOperatorType.NumberLessThan;
-            }
-            else if (type == typeof(NumberLessThanOrEqualsAdvancedFilter))
-            {
-                return AdvancedFilterOperatorType.NumberLessThanOrEquals;
-            }
-            else if (type == typeof(NumberGreaterThanAdvancedFilter))
-            {
-                return AdvancedFilterOperatorType.NumberGreaterThan;
-            }
-            else if (type == typeof(NumberGreaterThanOrEqualsAdvancedFilter))
-            {
-                return AdvancedFilterOperatorType.NumberGreaterThanOrEquals;
-            }
-            else if (type == typeof(BoolEqualsAdvancedFilter))
-            {
-                return AdvancedFilterOperatorType.BoolEquals;
-            }
-            else if (type == typeof(StringInAdvancedFilter))
-            {
-                return AdvancedFilterOperatorType.StringIn;
-            }
-            else if (type == typeof(StringNotInAdvancedFilter))
-            {
-                return AdvancedFilterOperatorType.StringNotIn;
-            }
-            else if (type == typeof(StringBeginsWithAdvancedFilter))
-            {
-                return AdvancedFilterOperatorType.StringBeginsWith;
-            }
-            else if (type == typeof(StringEndsWithAdvancedFilter))
-            {
-                return AdvancedFilterOperatorType.StringEndsWith;
-            }
-            else if (type == typeof(StringContainsAdvancedFilter))
-            {
-                return AdvancedFilterOperatorType.StringContains;
-            }
-
-            throw new InvalidOperationException($"Unknown type {type.Name}. Cannot map it to an {nameof(AdvancedFilterOperatorType)}.");
+                _ => throw new ArgumentException($"Advanced Filter operatorType {operatorType} not supported"),
+            };
         }
     }
 }

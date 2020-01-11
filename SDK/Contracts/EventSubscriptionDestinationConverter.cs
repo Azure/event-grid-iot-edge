@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------------
 
 using System;
+using Microsoft.Azure.EventGridEdge.SDK.Contracts;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -49,6 +50,18 @@ namespace Microsoft.Azure.EventGridEdge.SDK
             else if (endpointType.Equals(EndpointTypes.EventGrid, StringComparison.OrdinalIgnoreCase))
             {
                 return typeof(EventGridEventSubscriptionDestination);
+            }
+            else if (endpointType.Equals(EndpointTypes.EventHub, StringComparison.OrdinalIgnoreCase))
+            {
+                return typeof(EventHubEventSubscriptionDestination);
+            }
+            else if (endpointType.Equals(EndpointTypes.ServiceBusQueue, StringComparison.OrdinalIgnoreCase))
+            {
+                return typeof(ServiceBusQueueEventSubscriptionDestination);
+            }
+            else if (endpointType.Equals(EndpointTypes.ServiceBusTopic, StringComparison.OrdinalIgnoreCase))
+            {
+                return typeof(ServiceBusTopicEventSubscriptionDestination);
             }
             else if (!string.IsNullOrWhiteSpace(endpointType))
             {

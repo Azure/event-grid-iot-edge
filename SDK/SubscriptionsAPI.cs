@@ -26,7 +26,7 @@ namespace Microsoft.Azure.EventGridEdge.SDK
             using (StreamContent streamContent = this.client.CreateJsonContent(eventSubscription))
             using (var request = new HttpRequestMessage(HttpMethod.Put, $"topics/{UrlEncoder.Default.Encode(topicName)}/eventSubscriptions/{UrlEncoder.Default.Encode(subscriptionName)}{ApiVersionSuffix}") { Content = streamContent })
             {
-                using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token))
+                using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token).ConfigureAwait(false))
                 {
                     await response.ThrowIfFailedAsync(request);
                     return await this.client.DeserializeAsync<EventSubscription>(response);
@@ -37,7 +37,7 @@ namespace Microsoft.Azure.EventGridEdge.SDK
         public async Task<EventSubscription> GetEventSubscriptionAsync(string topicName, string subscriptionName, CancellationToken token)
         {
             using (var request = new HttpRequestMessage(HttpMethod.Get, $"topics/{UrlEncoder.Default.Encode(topicName)}/eventSubscriptions/{UrlEncoder.Default.Encode(subscriptionName)}{ApiVersionSuffix}"))
-            using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token))
+            using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token).ConfigureAwait(false))
             {
                 await response.ThrowIfFailedAsync(request);
                 return await this.client.DeserializeAsync<EventSubscription>(response);
@@ -47,7 +47,7 @@ namespace Microsoft.Azure.EventGridEdge.SDK
         public async Task<IEnumerable<EventSubscription>> GetEventSubscriptionsAsync(string topicName, CancellationToken token)
         {
             using (var request = new HttpRequestMessage(HttpMethod.Get, $"topics/{UrlEncoder.Default.Encode(topicName)}/eventSubscriptions/{ApiVersionSuffix}"))
-            using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token))
+            using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token).ConfigureAwait(false))
             {
                 await response.ThrowIfFailedAsync(request);
                 return await this.client.DeserializeAsync<IEnumerable<EventSubscription>>(response);
@@ -57,7 +57,7 @@ namespace Microsoft.Azure.EventGridEdge.SDK
         public async Task DeleteEventSubscriptionAsync(string topicName, string subscriptionName, CancellationToken token)
         {
             using (var request = new HttpRequestMessage(HttpMethod.Delete, $"topics/{UrlEncoder.Default.Encode(topicName)}/eventSubscriptions/{UrlEncoder.Default.Encode(subscriptionName)}{ApiVersionSuffix}"))
-            using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token))
+            using (HttpResponseMessage response = await this.client.HttpClient.SendAsync(request, token).ConfigureAwait(false))
             {
                 await response.ThrowIfFailedAsync(request);
             }

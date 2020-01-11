@@ -4,8 +4,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>$(RootNamespacePrefix)SDK</RootNamespace>
     <AssemblyName>$(RootNamespace)</AssemblyName>
-    <TargetFrameworks>netcoreapp2.1;netstandard2.0</TargetFrameworks>
-    <TargetsForTfmSpecificBuildOutput Condition="'$(TargetFramework)'=='netcoreapp2.1'">$(TargetsForTfmSpecificBuildOutput);IncludeP2PAssets</TargetsForTfmSpecificBuildOutput>
+    <TargetFrameworks>netcoreapp3.0;netstandard2.1</TargetFrameworks>
+    <TargetsForTfmSpecificBuildOutput Condition="'$(TargetFramework)'=='netcoreapp3.0'">$(TargetsForTfmSpecificBuildOutput);IncludeP2PAssets</TargetsForTfmSpecificBuildOutput>
     
     <!-- nuget pack default properties
     Id/PackageId defaults to AssemblyName
@@ -28,7 +28,7 @@
     <PackageReference Include="System.Text.Encodings.Web" Version="4.5.0" />
   </ItemGroup>
   
-  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp2.1'">
+  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
     <ProjectReference Include="..\SecurityDaemonClient\SecurityDaemonClient.csproj" PrivateAssets="all"/>
     <!-- Explicitly add SecurityDaemonClient's dependencies here otherwise the generated nuspec won't have these listed.-->
     <!-- Ideally SecurityDaemonClient should be its' own nuget. -->
