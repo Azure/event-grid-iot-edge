@@ -25,19 +25,25 @@ namespace Microsoft.Azure.EventGridEdge.Samples.Subscriber
 
             // signals to long running components when to power down (either due to a Ctrl+C, or Ctrl-Break, or SIGTERM, or SIGKILL)
             CancellationTokenSource lifetimeCts = SetupGracefulShutdown(resetEvent);
-
-            GridConfiguration gridConfig = GetGridConfiguration();
-            EventGridEdgeClient egClient = GetEventGridClientAsync(gridConfig).GetAwaiter().GetResult();
             SubscriberHost host = SetupSubscriberHostAsync(lifetimeCts).GetAwaiter().GetResult();
 
-            // certificate issued by IoT Edge takes a while to be current so will wait for a bit
-            Thread.Sleep(120 * 1000);
+            IConfigurationSection hostConfigurationSection = GetHostConfigurationSection();
 
-            // wait for topic to exist
-            await WaitUntilEventGridModuleIsUpAndTopicExistsAsync(egClient, gridConfig.Topic.Name).ConfigureAwait(false);
+            if (ShouldAutoCreateSubscription())
+            {
+                GridConfiguration gridConfig = GetGridConfiguration();
+                EventGridEdgeClient egClient = GetEventGridClientAsync(gridConfig).GetAwaiter().GetResult();
 
-            // register subscription
-            await RegisterSubscriptionAsync(egClient, gridConfig).ConfigureAwait(false);
+                // certificate issued by IoT Edge takes a while to be current so will wait for a bit
+                Thread.Sleep(120 * 1000);
+
+                // wait for topic to exist
+                await WaitUntilEventGridModuleIsUpAndTopicExistsAsync(egClient, gridConfig.Topic.Name).ConfigureAwait(false);
+
+                // register subscription
+                await RegisterSubscriptionAsync(egClient, gridConfig).ConfigureAwait(false);
+            }
+
 
             // wait until shutdown
             await host.WaitForShutdownAsync().ConfigureAwait(false);
@@ -46,21 +52,32 @@ namespace Microsoft.Azure.EventGridEdge.Samples.Subscriber
             resetEvent.Set();
         }
 
-        private static GridConfiguration GetGridConfiguration()
+        private static IConfigurationSection GetHostConfigurationSection()
         {
-            IConfiguration configuration = new ConfigurationBuilder()
+            var configurationBuilder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("HostSettings.json", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .Build();
 
-            IConfigurationSection hostConfigurationSection = configuration.GetSection("configuration");
-            if (!hostConfigurationSection.GetValue("enableEventGrid", true))
-            {
-                throw new Exception("Need to set configuration:enableEventGrid=true to come up!");
-            }
+            return configurationBuilder.GetSection("configuration");
+        }
 
-            IConfigurationSection eventGridSection = hostConfigurationSection.GetSection("eventGrid");
+        private static IConfigurationSection GetEventGridConfigurationSection()
+        {
+            IConfigurationSection hostConfigSection = GetHostConfigurationSection();
+            return hostConfigSection.GetSection("eventGrid");
+        }
+
+        private static bool ShouldAutoCreateSubscription()
+        {
+            IConfigurationSection hostConfigSection = GetHostConfigurationSection();
+            return hostConfigSection.GetValue("createEventGridSubscription", false);
+        }
+
+        private static GridConfiguration GetGridConfiguration()
+        {
+            IConfigurationSection eventGridSection = GetEventGridConfigurationSection();
             GridConfiguration gridConfig = eventGridSection.Get<GridConfiguration>();
             ValidateConfiguration(gridConfig);
             return gridConfig;

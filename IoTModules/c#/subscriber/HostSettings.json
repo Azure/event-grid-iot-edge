@@ -1,6 +1,6 @@
 ﻿{
   "configuration": {
-    "enableEventGrid":  true,
+    "createEventGridSubscription": false,
     "eventGrid": {
       "url": "https://eventgridmodule:4438",
       "initialDelayInSeconds": 60,

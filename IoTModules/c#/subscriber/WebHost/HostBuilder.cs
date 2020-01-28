@@ -40,6 +40,8 @@ namespace Microsoft.Azure.EventGridEdge.Samples.Subscriber
                             o.ClientCertificateValidation = (X509Certificate2 arg1, X509Chain arg2, SslPolicyErrors arg3) => true;
                         }
                     });
+
+                    options.AllowSynchronousIO = true;
                 })
                 .ConfigureLogging((ILoggingBuilder logging) =>
                 {

@@ -34,19 +34,22 @@ namespace Microsoft.Azure.EventGridEdge.Samples.Subscriber
             if (method.Equals(HttpMethods.Post, StringComparison.OrdinalIgnoreCase))
             {
                 HttpRequest request = context.Request;
-                X509Certificate2 clientCert = await request.HttpContext.Connection.GetClientCertificateAsync().ConfigureAwait(false);
-                if (clientCert == null)
+                bool isHttps = request.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase);
+                if (isHttps)
                 {
-                    throw new Exception("Client certificate not provided!");
-                }
+                    X509Certificate2 clientCert = await context.Connection.GetClientCertificateAsync().ConfigureAwait(false);
+                    if (clientCert == null)
+                    {
+                        throw new Exception("Client certificate not provided!");
+                    }
 
-                await iotSecurity.ValidateClientCertificateAsync(clientCert);
+                    Console.WriteLine("Validating client certificate...");
+                    await iotSecurity.ValidateClientCertificateAsync(clientCert);
+                }
 
                 // TODO: Verify it is eventgrid instance indeed!
-                using (var cts = new CancellationTokenSource(1000 * 30))
-                {
-                    this.eventsHandler.HandleEvents(request.Body);
-                }
+                using var cts = new CancellationTokenSource(1000 * 30);
+                this.eventsHandler.HandleEvents(request.Body);
             }
             else
             {
