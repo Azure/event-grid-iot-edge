@@ -1,6 +1,6 @@
 ARG base_tag=3.0-nanoserver-1809
 
-FROM microsoft/dotnet:3.0-sdk AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
 WORKDIR /src
 COPY . ./
 RUN dotnet restore \src\IoTModules\c#\subscriber\Subscriber.csproj
