@@ -37,7 +37,12 @@ namespace Microsoft.Azure.EventGridEdge.Samples.Subscriber
                         {
                             // this is needed because IoTEdge generates a self signed certificate that is not rooted in a root certificate that is trusted by the trust provider.
                             // Kestrel rejects the request automatically because of this. We return true here so that client validation can happen when routing requests.
-                            o.ClientCertificateValidation = (X509Certificate2 arg1, X509Chain arg2, SslPolicyErrors arg3) => true;
+                            o.AllowAnyClientCertificate();
+                            o.CheckCertificateRevocation = false;
+                            o.ClientCertificateValidation = (X509Certificate2 arg1, X509Chain arg2, SslPolicyErrors arg3) =>
+                            {
+                                return true;
+                            };
                         }
                     });
 
