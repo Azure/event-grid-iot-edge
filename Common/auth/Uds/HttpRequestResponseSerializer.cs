@@ -1,5 +1,7 @@
-﻿// Copyright(c) Microsoft Corporation.
-// Licensed under the MIT license.
+﻿// -----------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// -----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -9,21 +11,24 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.Azure.EventGridEdge.Samples.Common.Auth
+namespace Microsoft.Azure.EventGridEdge.IotEdge
 {
-    public class HttpSerializer
+    internal class HttpRequestResponseSerializer
     {
         private const char SP = ' ';
         private const char CR = '\r';
         private const char LF = '\n';
         private const char ProtocolVersionSeparator = '/';
         private const string Protocol = "HTTP";
-        private const char HeaderSeparator = ':';
+        private const string HeaderSeparator = ":";
         private const string ContentLengthHeaderName = "content-length";
 
         public byte[] SerializeRequest(HttpRequestMessage request)
         {
-            this.PreProcessRequest(request);
+            Validate.ArgumentNotNull(request, nameof(request));
+            Validate.ArgumentNotNull(request.RequestUri, nameof(request.RequestUri));
+
+            PreProcessRequest(request);
 
             var builder = new StringBuilder();
             // request-line   = method SP request-target SP HTTP-version CRLF
@@ -60,14 +65,12 @@ namespace Microsoft.Azure.EventGridEdge.Samples.Common.Auth
         public async Task<HttpResponseMessage> DeserializeResponseAsync(HttpBufferedStream bufferedStream, CancellationToken cancellationToken)
         {
             var httpResponse = new HttpResponseMessage();
-
-            await this.SetResponseStatusLineAsync(httpResponse, bufferedStream, cancellationToken);
-            await this.SetHeadersAndContentAsync(httpResponse, bufferedStream, cancellationToken);
-
+            await SetResponseStatusLineAsync(httpResponse, bufferedStream, cancellationToken);
+            await SetHeadersAndContentAsync(httpResponse, bufferedStream, cancellationToken);
             return httpResponse;
         }
 
-        private async Task SetHeadersAndContentAsync(HttpResponseMessage httpResponse, HttpBufferedStream bufferedStream, CancellationToken cancellationToken)
+        private static async Task SetHeadersAndContentAsync(HttpResponseMessage httpResponse, HttpBufferedStream bufferedStream, CancellationToken cancellationToken)
         {
             IList<string> headers = new List<string>();
             string line = await bufferedStream.ReadLineAsync(cancellationToken);
@@ -113,7 +116,7 @@ namespace Microsoft.Azure.EventGridEdge.Samples.Common.Auth
             }
         }
 
-        private async Task SetResponseStatusLineAsync(HttpResponseMessage httpResponse, HttpBufferedStream bufferedStream, CancellationToken cancellationToken)
+        private static async Task SetResponseStatusLineAsync(HttpResponseMessage httpResponse, HttpBufferedStream bufferedStream, CancellationToken cancellationToken)
         {
             string statusLine = await bufferedStream.ReadLineAsync(cancellationToken);
             if (string.IsNullOrWhiteSpace(statusLine))
@@ -144,7 +147,7 @@ namespace Microsoft.Azure.EventGridEdge.Samples.Common.Auth
             httpResponse.ReasonPhrase = statusLineParts[2];
         }
 
-        private void PreProcessRequest(HttpRequestMessage request)
+        private static void PreProcessRequest(HttpRequestMessage request)
         {
             if (string.IsNullOrEmpty(request.Headers.Host))
             {

@@ -1,14 +1,16 @@
-﻿// Copyright(c) Microsoft Corporation.
-// Licensed under the MIT license.
+﻿// -----------------------------------------------------------------------
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// -----------------------------------------------------------------------
 
 using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.Azure.EventGridEdge.Samples.Common.Auth
+namespace Microsoft.Azure.EventGridEdge.IotEdge
 {
-    public class HttpBufferedStream : Stream
+    internal class HttpBufferedStream : Stream
     {
         private const char CR = '\r';
         private const char LF = '\n';

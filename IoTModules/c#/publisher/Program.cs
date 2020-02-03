@@ -13,7 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Collections.Generic;
-using Microsoft.Azure.EventGridEdge.Samples.Common.Auth;
+using Microsoft.Azure.EventGridEdge.IotEdge;
 
 namespace Microsoft.Azure.EventGridEdge.Samples.Publisher
 {
@@ -164,8 +164,8 @@ namespace Microsoft.Azure.EventGridEdge.Samples.Publisher
 
             if (gridConfig.ClientAuth.Source.Equals("IoTEdge", StringComparison.OrdinalIgnoreCase))
             {
-                IoTSecurity iotSecurity = new IoTSecurity();
-                (X509Certificate2 identityCertificate, IEnumerable<X509Certificate2> chain) = await iotSecurity.GetClientCertificateAsync();
+                SecurityDaemonClient iotSecurity = new SecurityDaemonClient();
+                (X509Certificate2 identityCertificate, IEnumerable<X509Certificate2> chain) = await iotSecurity.GetIdentityCertificateAsync();
                 return new EventGridEdgeClient(baseUrl, port, new CustomHttpClientFactory(chain.First(), identityCertificate));
             }
             else if (gridConfig.ClientAuth.Source.Equals("BearerToken", StringComparison.OrdinalIgnoreCase))

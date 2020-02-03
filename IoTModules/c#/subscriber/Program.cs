@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net.Http;
@@ -12,8 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.EventGridEdge.SDK;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System.Linq;
-using Microsoft.Azure.EventGridEdge.Samples.Common.Auth;
+using Microsoft.Azure.EventGridEdge.IotEdge;
 
 namespace Microsoft.Azure.EventGridEdge.Samples.Subscriber
 {
@@ -85,18 +83,24 @@ namespace Microsoft.Azure.EventGridEdge.Samples.Subscriber
 
         private static async Task<SubscriberHost> SetupSubscriberHostAsync(CancellationTokenSource lifetimeCts)
         {
-            IoTSecurity iotSecurity = new IoTSecurity();
+            using var securityDaemonClient = new SecurityDaemonClient();
 
             // get server certificate to configure with
-            (X509Certificate2 serverCertificate, IEnumerable<X509Certificate2> certificateChain) =
-                await iotSecurity.GetServerCertificateAsync().ConfigureAwait(false);
-            iotSecurity.ImportCertificate(new List<X509Certificate2>() { serverCertificate });
-            iotSecurity.ImportCertificate(certificateChain);
+            Console.WriteLine($"Configure server certificate");
+            (X509Certificate2 serverCert, X509Certificate2[] certChain) =
+                await securityDaemonClient.GetServerCertificateAsync().ConfigureAwait(false);
 
-            Console.WriteLine($"Server Certificate issue is valid from {serverCertificate.NotBefore}, {serverCertificate.NotAfter}");
+            CertificateHelper.ImportCertificate(serverCert);
+            CertificateHelper.ImportIntermediateCAs(serverCert);
+            CertificateHelper.ImportIntermediateCAs(certChain);
+
+            // Configure client trust bundle
+            Console.WriteLine($"Configure client trust bundle");
+            var trustBundle = await securityDaemonClient.GetTrustBundleAsync();
+            CertificateHelper.ImportIntermediateCAs(trustBundle);
 
             // start subscriber webhost
-            SubscriberHost host = new SubscriberHost(serverCertificate, lifetimeCts);
+            SubscriberHost host = new SubscriberHost(serverCert, lifetimeCts);
             await host.StartAsync().ConfigureAwait(false);
             return host;
         }
@@ -140,10 +144,10 @@ namespace Microsoft.Azure.EventGridEdge.Samples.Subscriber
 
         private static async Task<EventGridEdgeClient> GetEventGridClientAsync(GridConfiguration gridConfig)
         {
-            IoTSecurity iotSecurity = new IoTSecurity();
+            using var securityDaemonClient = new SecurityDaemonClient();
 
             // get the client certificate to use when communicating with eventgrid
-            (X509Certificate2 clientCertificate, IEnumerable<X509Certificate2> chain) = await iotSecurity.GetClientCertificateAsync().ConfigureAwait(false);
+            (X509Certificate2 clientCertificate, X509Certificate2[] chain) = await securityDaemonClient.GetIdentityCertificateAsync().ConfigureAwait(false);
             Console.WriteLine($"Client Certificate issue is valid from {clientCertificate.NotBefore}, {clientCertificate.NotAfter}");
             string[] urlTokens = gridConfig.Url.Split(":");
             if (urlTokens.Length != 3)
@@ -154,7 +158,7 @@ namespace Microsoft.Azure.EventGridEdge.Samples.Subscriber
             string baseUrl = urlTokens[0] + ":" + urlTokens[1];
             int port = int.Parse(urlTokens[2], CultureInfo.InvariantCulture);
 
-            return new EventGridEdgeClient(baseUrl, port, new CustomHttpClientFactory(chain.First(), clientCertificate));
+            return new EventGridEdgeClient(baseUrl, port, new CustomHttpClientFactory(chain[0], clientCertificate));
         }
 
         private static void LogAndBackoff(string topicName, Exception e)

@@ -3,7 +3,6 @@
 
 using System;
 using System.IO;
-using System.Net.Security;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Hosting;
@@ -35,12 +34,14 @@ namespace Microsoft.Azure.EventGridEdge.Samples.Subscriber
 
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            // this is needed because IoTEdge generates a self signed certificate that is not rooted in a root certificate that is trusted by the trust provider.
-                            // Kestrel rejects the request automatically because of this. We return true here so that client validation can happen when routing requests.
                             o.AllowAnyClientCertificate();
                             o.CheckCertificateRevocation = false;
-                            o.ClientCertificateValidation = (X509Certificate2 arg1, X509Chain arg2, SslPolicyErrors arg3) =>
+
+                            // this is needed because IoTEdge generates a self signed certificate that is not rooted in a root certificate that is trusted by the trust provider.
+                            // Kestrel rejects the request automatically because of this. We return true here so that client validation can happen when routing requests.
+                            o.ClientCertificateValidation = (cert, chain, errors) =>
                             {
+                                Console.WriteLine("ClientCertValidation invoked");
                                 return true;
                             };
                         }
